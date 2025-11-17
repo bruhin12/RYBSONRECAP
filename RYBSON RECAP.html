@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>RybsonLoL – Rocznik klipów (linia czasu)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --card: rgba(15,23,42,0.96);
+      --border: rgba(148,163,184,0.4);
+      --accent: #38bdf8;
+      --accent-soft: rgba(56,189,248,0.18);
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --radius: 16px;
+      --transition: 0.2s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px 16px 40px;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 10% 15%, rgba(56,189,248,0.16) 0, transparent 55%),
+        radial-gradient(circle at 90% 10%, rgba(168,85,247,0.16) 0, transparent 55%),
+        radial-gradient(circle at 50% 100%, rgba(34,197,94,0.14) 0, transparent 60%);
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    /* Tło – serduszko z rybek */
+    .fish-heart {
+      position: fixed;
+      top: 20%;
+      right: 5%;
+      width: 220px;
+      height: 210px;
+      opacity: 0.22;
+      pointer-events: none;
+      filter: drop-shadow(0 0 6px rgba(56,189,248,0.8));
+      clip-path: polygon(
+        50% 0%,
+        65% 8%,
+        80% 20%,
+        90% 35%,
+        92% 50%,
+        88% 63%,
+        80% 75%,
+        68% 86%,
+        55% 94%,
+        50% 100%,
+        45% 94%,
+        32% 86%,
+        20% 75%,
+        12% 63%,
+        8% 50%,
+        10% 35%,
+        20% 20%,
+        35% 8%
+      );
+      z-index: -1;
+    }
+
+    .fish-heart span {
+      position: absolute;
+      color: #fef9c3;
+      text-shadow: 0 0 4px rgba(250,250,200,0.9);
+      font-size: 10px;
+      animation: swim 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes swim {
+      from { transform: translateX(0) rotate(0deg); }
+      to   { transform: translateX(6px) rotate(5deg); }
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 26px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.9);
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .tag-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34,197,94,0.9);
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, 4.4vw, 2.4rem);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+
+    h1 span {
+      background: linear-gradient(135deg, #38bdf8, #a855f7);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--muted);
+      max-width: 520px;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+      margin-bottom: 16px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      font-size: 0.78rem;
+      padding: 4px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      background: rgba(15,23,42,0.9);
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background var(--transition), color var(--transition), border-color var(--transition), transform var(--transition);
+    }
+
+    .nav a span.icon {
+      font-size: 0.85rem;
+    }
+
+    .nav a:hover {
+      background: rgba(37,99,235,0.9);
+      border-color: rgba(191,219,254,0.95);
+      color: #e5e7eb;
+      transform: translateY(-1px);
+    }
+
+    /* TIMELINE */
+    .timeline-wrapper {
+      position: relative;
+      margin-top: 8px;
+      padding-left: 26px;
+    }
+
+    .timeline-wrapper::before {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, rgba(148,163,184,0.2), rgba(56,189,248,0.7));
+    }
+
+    .month-block {
+      position: relative;
+      margin-bottom: 26px;
+    }
+
+    .month-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .month-marker {
+      position: relative;
+      margin-left: -26px;
+      margin-right: 6px;
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      background: #020617;
+      border: 2px solid rgba(56,189,248,0.9);
+      box-shadow: 0 0 0 3px rgba(56,189,248,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #fef9c3;
+      font-size: 0.85rem;
+    }
+
+    .month-title {
+      font-size: 1rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .month-title span.icon {
+      font-size: 1.1rem;
+    }
+
+    .month-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .clip-list {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .clip-item {
+      position: relative;
+      margin-left: 10px;
+    }
+
+    .clip-item::before {
+      content: "";
+      position: absolute;
+      left: -18px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #020617;
+      border: 2px solid rgba(148,163,184,0.9);
+    }
+
+    .clip-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      backdrop-filter: blur(16px);
+      transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition), background var(--transition);
+    }
+
+    .clip-card:hover {
+      border-color: rgba(56,189,248,0.9);
+      background: rgba(15,23,42,1);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(15,23,42,0.96);
+    }
+
+    .clip-date {
+      min-width: 70px;
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.7);
+      text-align: center;
+      color: #e5e7eb;
+    }
+
+    .clip-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .clip-title {
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+
+    .clip-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-type {
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.7);
+      color: #bae6fd;
+      background: rgba(15,23,42,0.95);
+      white-space: nowrap;
+    }
+
+    .clip-link {
+      text-decoration: none;
+      font-size: 0.78rem;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.96);
+      border: 1px solid rgba(148,163,184,0.7);
+      color: #e5e7eb;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background var(--transition), border-color var(--transition), transform var(--transition), color var(--transition);
+      white-space: nowrap;
+    }
+
+    .clip-link span.icon {
+      font-size: 0.9rem;
+    }
+
+    .clip-link:hover {
+      background: rgba(37,99,235,0.92);
+      border-color: rgba(191,219,254,0.95);
+      color: #f9fafb;
+      transform: translateY(-1px);
+    }
+
+    footer {
+      margin-top: 24px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    footer span.tagline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px dashed rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+    }
+
+    footer span.icon {
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 600px) {
+      .timeline-wrapper {
+        padding-left: 22px;
+      }
+      .timeline-wrapper::before {
+        left: 8px;
+      }
+      .month-marker {
+        margin-left: -22px;
+      }
+      .clip-item::before {
+        left: -16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Tło: serduszko z rybek -->
+  <div class="fish-heart" id="fishHeart"></div>
+
+  <div class="container">
+    <header>
+      <div class="tag">
+        <span class="tag-dot"></span>
+        ROCZNIK KLIPÓW RYBSONA
+      </div>
+      <h1>
+        URODZINOWA <span>LINIA CZASU</span>
+      </h1>
+      <p class="subtitle">
+        Wszystkie najważniejsze klipy poukładane od stycznia do sierpnia – idealne do przewijania na streamie.
+      </p>
+
+      <nav class="nav">
+        <a href="#styczen"><span class="icon">❄️</span> Styczeń</a>
+        <a href="#luty"><span class="icon">❤️</span> Luty</a>
+        <a href="#marzec"><span class="icon">🌧️</span> Marzec</a>
+        <a href="#kwiecien"><span class="icon">🌸</span> Kwiecień</a>
+        <a href="#maj"><span class="icon">🌼</span> Maj</a>
+        <a href="#czerwiec"><span class="icon">🔥</span> Czerwiec</a>
+        <a href="#lipiec"><span class="icon">☀️</span> Lipiec</a>
+        <a href="#sierpien"><span class="icon">🎰</span> Sierpień</a>
+      </nav>
+    </header>
+
+    <main class="timeline-wrapper">
+      <!-- STYCZEŃ -->
+      <section class="month-block" id="styczen">
+        <div class="month-header">
+          <div class="month-marker">1</div>
+          <div>
+            <div class="month-title">
+              <span class="icon">❄️</span> Styczeń
+            </div>
+            <div class="month-sub">START ROKU</div>
+          </div>
+        </div>
+
+        <ul class="clip-list">
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">09.01</div>
+              <div class="clip-main">
+                <div class="clip-title">Klip 1 (09.01)</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://www.twitch.tv/rybsonlol_/clip/SilkyLachrymoseShieldHassanChop-DUaPEWQ6NHxg2weq" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">09.01</div>
+              <div class="clip-main">
+                <div class="clip-title">Klip 2 (09.01)</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/UnusualAmorphousCucumberRuleFive-UeKepTxXvkYcbJw-?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">11.01</div>
+              <div class="clip-main">
+                <div class="clip-title">Klip 3 (11.01)</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/SpookyDiligentIguanaMikeHogu-uTNQgY8-8AC0I1-F?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- LUTY -->
+      <section class="month-block" id="luty">
+        <div class="month-header">
+          <div class="month-marker">2</div>
+          <div>
+            <div class="month-title">
+              <span class="icon">❤️</span> Luty
+            </div>
+            <div class="month-sub">ZAKŁADY I ŻARTY</div>
+          </div>
+        </div>
+
+        <ul class="clip-list">
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">14.01.2025</div>
+              <div class="clip-main">
+                <div class="clip-title">Zakład</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/FuriousSourSalmonKappa-eybw84Y3Ni1RC-uS?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">17.01.2025</div>
+              <div class="clip-main">
+                <div class="clip-title">LEGENDARNE ŻARTY XAYOO #1</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/SaltyDeafPorpoiseSSSsss-3lq4yC4GGk1T35SF?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">19.01</div>
+              <div class="clip-main">
+                <div class="clip-title">LEGENDARNE ŻARTY XAYOO #2</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/VastSwissCheesePogChamp-YisvaI0IFxXAQTnJ?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- MARZEC -->
+      <section class="month-block" id="marzec">
+        <div class="month-header">
+          <div class="month-marker">3</div>
+          <div>
+            <div class="month-title">
+              <span class="icon">🌧️</span> Marzec
+            </div>
+            <div class="month-sub">KMF &amp; BURZA</div>
+          </div>
+        </div>
+
+        <ul class="clip-list">
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">04.03</div>
+              <div class="clip-main">
+                <div class="clip-title">Przegrana KMF</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/OptimisticDeliciousOtterBrokeBack-AGzbxNgwyyjaWFF1?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">10.03</div>
+              <div class="clip-main">
+                <div class="clip-title">Chwila przed burzą</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/ShakingYawningPlumageUncleNox-FwnSdH1aFfRVEfQG?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">12.03</div>
+              <div class="clip-main">
+                <div class="clip-title">Boją się</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/ConsiderateBlitheBadgerBabyRage-TXoYhChOZnvrYxxN?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- KWIECIEŃ -->
+      <section class="month-block" id="kwiecien">
+        <div class="month-header">
+          <div class="month-marker">4</div>
+          <div>
+            <div class="month-title">
+              <span class="icon">🌸</span> Kwiecień
+            </div>
+            <div class="month-sub">RIZZ &amp; ROWERY</div>
+          </div>
+        </div>
+
+        <ul class="clip-list">
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">13.04</div>
+              <div class="clip-main">
+                <div class="clip-title">Rizz Maquk</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/BlatantStylishMagpieTebowing-UlathRfz3zNtaRGT?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">22.04</div>
+              <div class="clip-main">
+                <div class="clip-title">Przygotowywanie rowerowe</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/YummyColorfulKeyboardPipeHype-5KwBLsknmUfdLT_K?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">23.04</div>
+              <div class="clip-main">
+                <div class="clip-title">Rowery z Paramaxilem</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/VainCredulousReindeerHoneyBadger-eNgDVD85M9Fdjq9x?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- MAJ -->
+      <section class="month-block" id="maj">
+        <div class="month-header">
+          <div class="month-marker">5</div>
+          <div>
+            <div class="month-title">
+              <span class="icon">🌼</span> Maj
+            </div>
+            <div class="month-sub">AFERA &amp; BOKS</div>
+          </div>
+        </div>
+
+        <ul class="clip-list">
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">01.05</div>
+              <div class="clip-main">
+                <div class="clip-title">Afera rowerowa</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/BelovedExquisiteVultureJonCarnage-ZyWx8aPPeWvdQN5M?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">24.05</div>
+              <div class="clip-main">
+                <div class="clip-title">Rozwód</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/ComfortableInspiringUdonPeteZarollTie-8p49CJFAn99cqsss?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">28.05</div>
+              <div class="clip-main">
+                <div class="clip-title">Boks Maquk</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/FastElatedTapirOSsloth-Qojq4BpsB34Bnpko?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- CZERWIEC -->
+      <section class="month-block" id="czerwiec">
+        <div class="month-header">
+          <div class="month-marker">6</div>
+          <div>
+            <div class="month-title">
+              <span class="icon">🔥</span> Czerwiec
+            </div>
+            <div class="month-sub">BOOTCAMP</div>
+          </div>
+        </div>
+
+        <ul class="clip-list">
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">01.06</div>
+              <div class="clip-main">
+                <div class="clip-title">Bootcamp #1</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/FineEnticingPterodactylTebowing-X5Hjr3c_IFVft7hx?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">02.06</div>
+              <div class="clip-main">
+                <div class="clip-title">Bootcamp #2</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/FunnyBumblingPheasantPermaSmug-38lC4qJycNyQb9jR?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">03.06</div>
+              <div class="clip-main">
+                <div class="clip-title">Bootcamp #3</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/FitConcernedChinchillaRlyTho-WkqWSvFYk8WDfkQB?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- LIPIEC -->
+      <section class="month-block" id="lipiec">
+        <div class="month-header">
+          <div class="month-marker">7</div>
+          <div>
+            <div class="month-title">
+              <span class="icon">☀️</span> Lipiec
+            </div>
+            <div class="month-sub">CHALLENGE &amp; DZIECI</div>
+          </div>
+        </div>
+
+        <ul class="clip-list">
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">03.07</div>
+              <div class="clip-main">
+                <div class="clip-title">Challenge z Maquk</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/ImportantSnappyPepperoniTwitchRaid-NJeG-Z-xVsQyZwB2?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">20.07</div>
+              <div class="clip-main">
+                <div class="clip-title">Dzieci Roblox</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/VastFunDunlinBrainSlug-_F5Yxh9rEl7zOriJ?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">21.07</div>
+              <div class="clip-main">
+                <div class="clip-title">Dzieci Roblox #2</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/PatientLivelyPastaPeanutButterJellyTime-3I3miDOXnosR5vON?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- SIERPIEŃ -->
+      <section class="month-block" id="sierpien">
+        <div class="month-header">
+          <div class="month-marker">8</div>
+          <div>
+            <div class="month-title">
+              <span class="icon">🎰</span> Sierpień
+            </div>
+            <div class="month-sub">SPEEDRUN &amp; KASYNO</div>
+          </div>
+        </div>
+
+        <ul class="clip-list">
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">09.08</div>
+              <div class="clip-main">
+                <div class="clip-title">Speedrun</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/DifferentAmericanFinchOpieOP-ePxaOeD6aYHtkuGz?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">12.08</div>
+              <div class="clip-main">
+                <div class="clip-title">Oliwka kasyno</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/TubularSquarePeppermintNerfBlueBlaster-oZ-JviQTHCzxr4BV?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="clip-item">
+            <div class="clip-card">
+              <div class="clip-date">18.08</div>
+              <div class="clip-main">
+                <div class="clip-title">Normalny dzień u Gębiczów</div>
+              </div>
+              <div class="clip-actions">
+                <a class="clip-link" href="https://clips.twitch.tv/ResoluteApatheticWatercressBrokeBack-IjgpovIYF13h1KW8?tt_content=url&amp;tt_medium=clips_api" target="_blank" rel="noreferrer">
+                  <span class="icon">▶</span> Otwórz
+                </a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        <span class="tagline">
+          <span class="icon">🎂</span>
+          Cały rok w jednym scrollu – idealne na urodzinowy przegląd klipów.
+        </span>
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    // rybki w serduszku
+    const fishHeart = document.getElementById("fishHeart");
+    const fishCount = 40;
+    for (let i = 0; i < fishCount; i++) {
+      const span = document.createElement("span");
+      span.textContent = "🐟";
+      span.style.top = Math.random() * 100 + "%";
+      span.style.left = Math.random() * 100 + "%";
+      span.style.fontSize = (9 + Math.random() * 6) + "px";
+      span.style.animationDelay = (Math.random() * 3).toFixed(2) + "s";
+      fishHeart.appendChild(span);
+    }
+  </script>
+</body>
+</html>
